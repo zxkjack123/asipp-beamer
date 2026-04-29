@@ -1,48 +1,74 @@
-\ProvidesPackage{beamercolorthemeASIPPWhite}
-% Adapted from the default crane style
+\ProvidesPackage{beamercolorthemeASIPPWhite}[2026/04/29 ASIPP white color theme, aligned to ai-ppt asipp_template.pptx]
+
+% Color palette extracted from ai-ppt/templates/asipp_template.pptx (theme1.xml).
+% These are the canonical institute colors used by current ASIPP report templates.
 
 \mode<presentation>
 
-\definecolor{EmphColor}{RGB}{153,1,0}
-\definecolor{HighlightBackground}{RGB}{255,255,0}
-\definecolor{KeywordColor}{RGB}{0,0,95}
+% --- Primary palette ---
+\definecolor{ASIPPNavy}{HTML}{0F1423}     % dk2: titles, body text
+\definecolor{ASIPPBlue}{HTML}{6096E6}     % accent1: title rule, bullets, block titles
+\definecolor{ASIPPBlueDark}{HTML}{0563C1} % hyperlink / strong accent
+\definecolor{ASIPPCyan}{HTML}{58B6E5}     % accent2
+\definecolor{ASIPPGreen}{HTML}{56CA95}    % accent3 (example blocks)
+\definecolor{ASIPPAmber}{HTML}{FFBA55}    % accent4 (secondary highlight)
+\definecolor{ASIPPSalmon}{HTML}{F18870}   % accent5
+\definecolor{ASIPPRed}{HTML}{EC5F74}      % accent6 (alert text)
 
-% Color definitions
-\definecolor{ASIPPRed}{RGB}{153,1,0}
-\definecolor{ASIPPGold}{RGB}{205,153,0}
+% --- Compatibility aliases (legacy theme used these) ---
+\definecolor{ASIPPGold}{HTML}{FFBA55}
+\definecolor{EmphColor}{HTML}{EC5F74}
+\definecolor{HighlightBackground}{HTML}{FFBA55}
+\definecolor{KeywordColor}{HTML}{0F1423}
 
-\setbeamercolor*{section text}{fg=white!80!gray}
+% --- Backgrounds and text ---
+\setbeamercolor*{normal text}{fg=ASIPPNavy,bg=white}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor*{alerted text}{fg=ASIPPRed}
+\setbeamercolor*{example text}{fg=ASIPPGreen}
+\setbeamercolor{structure}{fg=ASIPPBlue}
 
-\setbeamercolor{item projected}{bg=ASIPPRed}
-\setbeamercolor{itemize item}{fg=ASIPPRed}
-\setbeamercolor{itemize subitem}{fg=ASIPPGold}
-\setbeamercolor{description item}{fg=ASIPPRed}
-\setbeamercolor{enumerate item}{fg=ASIPPRed}
-\setbeamercolor{enumerate subitem}{fg=ASIPPGold}
+% --- Title-related ---
+\setbeamercolor{title}{fg=ASIPPNavy}
+\setbeamercolor{subtitle}{fg=ASIPPBlueDark}
+\setbeamercolor{author}{fg=ASIPPNavy}
+\setbeamercolor{institute}{fg=ASIPPNavy!70!white}
+\setbeamercolor{date}{fg=ASIPPNavy!70!white}
+\setbeamercolor{frametitle}{fg=ASIPPNavy,bg=white}
+\setbeamercolor{framesubtitle}{fg=ASIPPBlueDark}
+\setbeamercolor{section text}{fg=ASIPPBlueDark}
+\setbeamercolor{titlelike}{fg=ASIPPNavy}
 
+% --- Lists ---
+\setbeamercolor{itemize item}{fg=ASIPPBlue}
+\setbeamercolor{itemize subitem}{fg=ASIPPAmber}
+\setbeamercolor{itemize subsubitem}{fg=ASIPPBlueDark}
+\setbeamercolor{enumerate item}{fg=ASIPPBlue}
+\setbeamercolor{enumerate subitem}{fg=ASIPPAmber}
+\setbeamercolor{description item}{fg=ASIPPBlueDark}
+\setbeamercolor{item projected}{fg=white,bg=ASIPPBlue}
 
-\setbeamercolor{palette secondary}{fg=white,bg=ASIPPRed}
-% This green is just so that I can figure out when, if ever, this
-% is used.  If it is a useful palette, it should be changed to something
-% else.  Let me know if you figure out what uses these.
-\setbeamercolor{palette tertiary}{fg=green,bg=ASIPPGold}
-\setbeamercolor{palette quaternary}{fg=white,bg=ASIPPRed}
+% --- Blocks: blue title bar on a soft tinted body ---
+\setbeamercolor{block title}{fg=white,bg=ASIPPBlue}
+\setbeamercolor{block body}{fg=ASIPPNavy,bg=ASIPPBlue!8!white}
+\setbeamercolor{block title alerted}{fg=white,bg=ASIPPRed}
+\setbeamercolor{block body alerted}{fg=ASIPPNavy,bg=ASIPPRed!8!white}
+\setbeamercolor{block title example}{fg=white,bg=ASIPPGreen}
+\setbeamercolor{block body example}{fg=ASIPPNavy,bg=ASIPPGreen!8!white}
 
-\setbeamercolor{titlelike}{parent=palette secondary}
+% --- Palette (used by sidebar / headline templates) ---
+\setbeamercolor{palette primary}{fg=ASIPPNavy,bg=white}
+\setbeamercolor{palette secondary}{fg=white,bg=ASIPPBlue}
+\setbeamercolor{palette tertiary}{fg=white,bg=ASIPPBlueDark}
+\setbeamercolor{palette quaternary}{fg=white,bg=ASIPPNavy}
 
-\setbeamercolor{block title}{parent=palette secondary}
-\setbeamercolor{block title alerted}{use=alerted text,fg=green,bg=alerted text.fg}
-\setbeamercolor{block title example}{use=example text,fg=green,bg=example text.fg}
+% --- Footline / page numbers ---
+\setbeamercolor{page number in head/foot}{fg=ASIPPNavy!70!white}
+\setbeamercolor{title in head/foot}{fg=ASIPPNavy!70!white}
+\setbeamercolor{author in head/foot}{fg=ASIPPNavy!70!white}
 
-% This ends up applying to most navigation-related things
-\setbeamercolor{sidebar}{bg=ASIPPGold}
+% --- Separation rules ---
+\setbeamercolor*{separation line}{bg=ASIPPBlue}
+\setbeamercolor*{fine separation line}{bg=ASIPPBlue!50!white}
 
-\setbeamercolor{palette sidebar primary}{fg=white}
-\setbeamercolor{palette sidebar secondary}{fg=ASIPPGold}
-
-\setbeamercolor*{separation line}{bg=ASIPPGold}
-\setbeamercolor*{fine separation line}{bg=ASIPPGold}
-
-
-\mode
-<all>
+\mode<all>

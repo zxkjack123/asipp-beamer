@@ -1,33 +1,105 @@
-% Copyright 2007 by Till Tantau
-%
-% This file may be distributed and/or modified
-%
-% 1. under the LaTeX Project Public License and/or
-% 2. under the GNU Public License.
-%
-% See the file doc/licenses/LICENSE for more details.
+\ProvidesPackage{beamerouterthemesubtle}[2026/04/29 ASIPP outer theme, PPTX-aligned]
 
-\ProvidesPackageRCS $Header: /home/vedranm/bitbucket/beamer/base/themes/outer/beamerouterthemeinfolines.sty,v 445340293dde 2010/07/10 12:51:34 rivanvx $
-
+% Outer theme matching the ai-ppt asipp_template.pptx layout:
+%   * Headline strip at the top of every content frame holds the ASIPP
+%     logo at the left corner with a short blue accent rule beneath it,
+%     plus the centred frame title aligned on the same horizontal band.
+%   * Frametitle template is intentionally minimal — the title is drawn
+%     by the headline so the logo and title share one row (matching PPTX).
+%   * [plain] frames (title page, section page, thanks page) skip the
+%     headline automatically, so those pages are corner-logo-free without
+%     any global flag plumbing.
+%   * Footline with right-aligned "第 N / M 页" page counter (auto switches
+%     to "Page N of M" via \asippfootenglish).
+%   * No sidebar, no navigation symbols by default.
+%
+% Honours the option switches defined in beamerthemeASIPP.sty:
+%   \ifbeamer@nologo, \ifbeamer@noslidenumbers, \ifbeamer@sections.
 
 \mode<presentation>
 
-% \setbeamercolor*{author in head/foot}{parent=palette tertiary}
-\setbeamercolor*{title in head/foot}{parent=palette secondary}
-\setbeamercolor*{page in head/foot}{parent=palette primary}
+\RequirePackage{graphicx}
 
-% \setbeamercolor*{section in head/foot}{parent=palette tertiary}
-% \setbeamercolor*{subsection in head/foot}{parent=palette primary}
+% Switch: English vs. Chinese page label in the footer. Defaults to Chinese
+% so the LaTeX deck matches the PPTX footer "第 N/M 页".
+\newif\ifasippenglishfoot
+\asippenglishfootfalse
+\newcommand{\asippfootenglish}{\asippenglishfoottrue}
+\newcommand{\asippfootchinese}{\asippenglishfootfalse}
 
-\defbeamertemplate*{footline}{subtle theme}
-{
-  \leavevmode%
-  \makebox[\paperwidth][r]{\insertframenumber{} / \inserttotalframenumber{}\hspace*{1ex}}%
-  \vspace*{1ex}%
-  \vskip0pt%
+% Customisation knobs (override before \begin{document} if needed).
+\providecommand{\asippcornerlogoheight}{1.20cm}
+% Top/left padding of the logo inside the headline strip.
+\providecommand{\asippcornerlogoleftskip}{0.30cm}
+\providecommand{\asippcornerlogotopskip}{0.20cm}
+% Vertical room reserved for the headline (logo + accent rule).
+\providecommand{\asippheadlineheight}{1.55cm}
+% Thin full-width separator drawn at the bottom of the headline band,
+% mirroring the PPTX layout.
+\providecommand{\asippheadlineruleheight}{0.8pt}
+
+% ----- Headline template (logo + frame title + full-width rule) --------
+% Renders the entire top band: corner logo on the left, centred frame
+% title aligned on the same horizontal band, and a thin full-width blue
+% rule across the bottom of the band. Frametitle template is intentionally
+% minimal because the title is drawn here. Plain frames (title page,
+% section page, thanks page) skip the headline so the logo and rule are
+% automatically absent there.
+\defbeamertemplate*{headline}{asipp pptx}{%
+  \ifbeamer@nologo\else
+    \leavevmode%
+    \hbox to \paperwidth{%
+      \hskip\asippcornerlogoleftskip%
+      \vbox to \asippheadlineheight{%
+        \vskip\asippcornerlogotopskip%
+        \hbox{\includegraphics[height=\asippcornerlogoheight]{asipp_logo.pdf}}%
+        \vfill
+      }%
+      \hss%
+      \vbox to \asippheadlineheight{%
+        \vfill
+        \hbox{\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle}%
+        \vfill
+      }%
+      \hss%
+      % Symmetric right-side spacer so the title centres visually.
+      \hbox to \dimexpr\asippcornerlogoleftskip+\asippcornerlogoheight\relax{\hss}%
+    }%
+    % Thin full-width rule at the bottom of the headline band.
+    \par\nointerlineskip%
+    {\color{ASIPPBlue!70!white}\hrule height \asippheadlineruleheight}%
+  \fi
 }
 
-\setbeamersize{text margin left=1em,text margin right=1em}
+% ----- Frametitle template (no-op: title is drawn by the headline) ------
+\defbeamertemplate*{frametitle}{asipp pptx}{%
+  \ifx\insertframesubtitle\@empty\else
+    \vskip0.4em%
+    \hspace*{1em}{\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\par}%
+    \vskip0.2em%
+  \fi
+}
 
-\mode
-<all>
+% ----- Footline template ------------------------------------------------
+\defbeamertemplate*{footline}{asipp pptx}{%
+  \ifbeamer@noslidenumbers\else
+    \leavevmode%
+    \hbox{%
+      \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em,rightskip=1em]{page number in head/foot}%
+        \hfill
+        \usebeamerfont{page number in head/foot}%
+        \ifasippenglishfoot
+          Page \insertframenumber\,/\,\inserttotalframenumber%
+        \else
+          第~\insertframenumber\,/\,\inserttotalframenumber~页%
+        \fi
+      \end{beamercolorbox}%
+    }%
+    \vskip0pt%
+  \fi
+}
+
+% Suppress the legacy sidebar.
+\setbeamersize{text margin left=1em,text margin right=1em,sidebar width left=0pt,sidebar width right=0pt}
+
+\mode<all>

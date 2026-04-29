@@ -1,0 +1,71 @@
+% Demo deck — visually verify the ASIPP beamer theme matches the
+% ai-ppt asipp_template.pptx visual identity.
+% Build:  xelatex demo.tex
+\documentclass[aspectratio=169]{ctexbeamer}
+\usetheme{ASIPP}
+
+\title{AI-PPT 展示案例}
+\subtitle{Beamer 主题与 PPTX 模板视觉对齐}
+\author{张三}
+\institute{中国科学院等离子体物理研究所}
+\date{2026-04-29}
+
+\begin{document}
+
+\frame[plain,noframenumbering]{\titlepage}
+
+\section{层级信息示例}
+
+\begin{frame}{层级信息示例}
+  \textbf{项目背景}
+  \begin{itemize}
+    \item 目标：统一样式、提高效率
+    \item 范围：多模板、多语言
+  \end{itemize}
+  \textbf{关键动作}
+  \begin{itemize}
+    \item LLM 生成结构化内容
+    \item 布局自动化与校验
+    \item 视觉优化（色彩 / 留白 / 对齐）
+  \end{itemize}
+  \alert{关键提醒：保持一致性}
+\end{frame}
+
+\section{块与对齐}
+
+\begin{frame}{Block 样式演示}
+  \begin{block}{标准块}
+    Beamer block 应使用与 PPTX 主色一致的蓝色标题条。
+  \end{block}
+  \begin{alertblock}{警示块}
+    用于强调风险或关键提醒。
+  \end{alertblock}
+  \begin{exampleblock}{示例块}
+    适合展示样例代码或数据。
+  \end{exampleblock}
+\end{frame}
+
+\section{两栏内容}
+
+\begin{frame}{两栏对比}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+      \textbf{方案 A}
+      \begin{itemize}
+        \item 计算成本低
+        \item 精度中等
+        \item 易于部署
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{方案 B}
+      \begin{itemize}
+        \item 精度高
+        \item 资源占用大
+        \item 需要 GPU
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+\thankspage[Q\&A]{谢谢！}
+
+\end{document}

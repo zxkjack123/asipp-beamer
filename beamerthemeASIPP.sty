@@ -1,146 +1,184 @@
-\ProvidesPackage{beamerthemeASIPP}
+\ProvidesPackage{beamerthemeASIPP}[2026/04/29 ASIPP beamer theme, aligned to ai-ppt PPTX master]
 
-% Adapted from the University of Wisconsin theme (https://github.com/travitch/uw-beamer-template)
-% and also from some mangled pieces of the default theme.  That probably puts this under
-% GPLv2.
+% =====================================================================
+% ASIPP beamer theme, redesigned in 2026-04 to align with the ai-ppt
+% asipp_template.pptx master used by the institute's PPTX deliverables.
+%
+% Visual identity replicated from the PPTX master:
+%   * 16:9 white-background slides (use [aspectratio=169])
+%   * ASIPP "CQ" logo at top-left of every content frame
+%   * Bold dark-navy title, thin blue rule underneath
+%   * Right-aligned footer "第 N / M 页" (or "Page N of M")
+%   * Section divider page with large centered section title
+%   * Dedicated thank-you/closing page
+%
+% Usage (recommended):
+%   \documentclass[aspectratio=169]{ctexbeamer}    % CJK
+%       % --- or for English-only decks ---
+%   % \documentclass[aspectratio=169]{beamer}
+%   \usetheme{ASIPP}                               % white variant (default)
+%       % --- or for the dark variant ---
+%   % \usetheme[dark]{ASIPP}
+%
+% Required asset (place in working directory or TeX search path):
+%   asipp_logo.pdf                                 % institute logo
+%
+% Provided commands beyond the standard beamer set:
+%   \asippsectionpage      % renders a section divider slide automatically at \section
+%   \thankspage{<message>} % renders a closing slide with the given message
+%   \asippfootenglish      % switch footer to "Page N of M"
+%   \asippfootchinese      % switch footer back to "第 N/M 页" (default)
+% =====================================================================
 
-\usepackage{tabularx}
+\RequirePackage{tabularx}
+\RequirePackage{tikz}
 
-%% The options for this template
-
-% If this option [nav] is present, include the navigation buttons in
-% the lower right corner.  The default is no navigation buttons
-\newif\ifbeamer@nav
-\beamer@navfalse
+% --- Options -------------------------------------------------------------
+\newif\ifbeamer@nav            \beamer@navfalse
 \DeclareOptionBeamer{nav}{\beamer@navtrue}
 
-% Use a more standard black-on-white scheme.  The option [white] is
-% not enabled by default.
-\newif\ifbeamer@white
-\beamer@whitefalse
-\DeclareOptionBeamer{white}{\beamer@whitetrue}
+\newif\ifbeamer@asippdark      \beamer@asippdarkfalse
+\DeclareOptionBeamer{dark}{\beamer@asippdarktrue}
+\DeclareOptionBeamer{white}{\beamer@asippdarkfalse}  % accepted for backward compat
 
-% If the option [nologo] is provided, the ASIPP logo on the right side of
-% the slide title is suppressed.  The logo is on by default.
-\newif\ifbeamer@nologo
-\beamer@nologofalse
+\newif\ifbeamer@nologo         \beamer@nologofalse
 \DeclareOptionBeamer{nologo}{\beamer@nologotrue}
 
-% The default logo has the crest above the university name, which uses
-% a lot of vertical room.  For a more 'compact' look, use the
-% [compactlogo] option.
-\newif\ifbeamer@compactlogo
-\beamer@compactlogofalse
+\newif\ifbeamer@compactlogo    \beamer@compactlogofalse
 \DeclareOptionBeamer{compactlogo}{\beamer@compactlogotrue}
 
-% The option [sections] shows the current section name under the slide
-% title.  There are no sections shown by default.
-\newif\ifbeamer@sections
-\beamer@sectionsfalse
+\newif\ifbeamer@sections       \beamer@sectionsfalse
 \DeclareOptionBeamer{sections}{\beamer@sectionstrue}
 
-% The option [noslidenumbers] suppresses the display of slide numbers.
-% Slide numbers are shown by default
-\newif\ifbeamer@noslidenumbers
-\beamer@noslidenumbersfalse
+\newif\ifbeamer@noslidenumbers \beamer@noslidenumbersfalse
 \DeclareOptionBeamer{noslidenumbers}{\beamer@noslidenumberstrue}
+
+\newif\ifbeamer@autoseppage    \beamer@autoseppagetrue
+\DeclareOptionBeamer{nosectionpage}{\beamer@autoseppagefalse}
 
 \ProcessOptionsBeamer
 
 \mode<presentation>
 
-%% Set up the logos used in the theme
-% This is the logo that goes in the upper right corner, in the frametitle.
-\logo{\includegraphics[height=0.6cm]{asipp_logo.pdf}}
-% This logo appears below the date on the title page.
-\ifbeamer@compactlogo
-  \ifbeamer@white
-    \titlegraphic{\includegraphics[height=1.5cm]{asipp_logo.pdf}}
-  \else
-    \titlegraphic{\includegraphics[height=1.5cm]{asipp_logo.pdf}}
-  \fi
-\else
-  \ifbeamer@white
-    \titlegraphic{\includegraphics[height=3cm]{asipp_logo.pdf}}
-  \else
-    \titlegraphic{\includegraphics[height=3cm]{asipp_logo.pdf}}
-  \fi
-\fi
-
-\setbeamertemplate{frametitle}[default][center]
-% Removes the logo from the lower right so that we can place it less obtrusively
-\defbeamertemplate*{sidebar right}{asipp theme}
-{
-  \vfill%
-  \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
-  \vskip2pt%
-}
-
-\newcommand{\frameTitleAndSection}[0]{
-  \ifbeamer@sections
-    \parbox{3in}{\insertframetitle \\ \tiny\usebeamercolor[fg]{section text}\insertsectionhead}
-  \else
-    \insertframetitle
-  \fi
-}
-
-\ifbeamer@noslidenumbers
-\else
-\useoutertheme{subtle}
-\fi
-
-% Redefine the frameheader to include a logo
-\defbeamertemplate*{frametitle}{asipp theme}[1][left]
-{
-  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
-  \@tempdima=\textwidth%
-  \advance\@tempdima by\beamer@leftmargin%
-  \advance\@tempdima by\beamer@rightmargin%
-  \begin{beamercolorbox}[sep=0.3cm,#1,wd=\the\@tempdima]{frametitle}
-    \usebeamerfont{frametitle}%
-    \vbox{}\vskip-1ex%
-    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
-    \begin{tabularx}{.95\@tempdima}{lXr}
-      \ifbeamer@nologo
-        \frameTitleAndSection & &
-      \else
-        \frameTitleAndSection & & \insertlogo
-      \fi
-    \end{tabularx}\par%
-    {%
-      \ifx\insertframesubtitle\@empty%
-      \else%
-      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
-      \fi
-    }%
-    \vskip-1ex%
-    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
-  \end{beamercolorbox}%
-}
-
-
-\useinnertheme{circles}
-
-\ifbeamer@white
-  \usecolortheme{ASIPPWhite}
-\else
+% --- Color theme ---------------------------------------------------------
+\ifbeamer@asippdark
   \usecolortheme{ASIPP}
+\else
+  \usecolortheme{ASIPPWhite}
 \fi
 
-% Circles are much nicer for bullet points, but the circles
-% inner theme does not give you rounded boxes.  Override these
-% settings as in the rounded theme.
-\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
-\setbeamertemplate{blocks}[rounded]
+% --- Inner theme: rounded blocks, circle bullets -------------------------
+\useinnertheme{circles}
+\setbeamertemplate{blocks}[rounded][shadow=false]
 
+% --- Outer theme (frametitle bar, footline) ------------------------------
+\useoutertheme{subtle}
 
-% Disable the navigation bar unless it was explicitly requested
-\ifbeamer@nav
+% --- Logo ---------------------------------------------------------------
+% The corner logo for content frames is drawn by an absolute TikZ overlay
+% in beamerouterthemesubtle.sty (see \asippcornerlogo). \logo{} is kept
+% empty so legacy templates referring to \insertlogo do not error.
+\logo{}
+\ifbeamer@compactlogo
+  \titlegraphic{\includegraphics[height=1.5cm]{asipp_logo.pdf}}
 \else
+  \titlegraphic{\includegraphics[height=2.4cm]{asipp_logo.pdf}}
+\fi
+
+% --- Fonts --------------------------------------------------------------
+\setbeamerfont{frametitle}{size=\LARGE,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\normalsize,shape=\itshape}
+\setbeamerfont{title}{size=\LARGE,series=\bfseries}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\small}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{block title}{size=\normalsize,series=\bfseries}
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+\setbeamerfont{section title}{size=\Huge,series=\bfseries}
+
+% --- Title page template (PPTX-aligned) ---------------------------------
+% Layout: logo top-center, title centered, subtitle, then
+% author / institute / date stacked below, separator rule above date.
+\defbeamertemplate*{title page}{asipp pptx}{%
+  \begin{centering}%
+    \vfill
+    \ifbeamer@nologo\else
+      {\inserttitlegraphic\par}%
+      \vskip1.0em%
+    \fi
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}%
+    \ifx\insertsubtitle\@empty\else
+      \vskip0.5em%
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+    \fi
+    \vskip1.5em%
+    {\color{ASIPPBlue}\rule{0.4\paperwidth}{0.6pt}}\par%
+    \vskip1.0em%
+    {\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}%
+    \vskip0.3em%
+    {\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}%
+    \vskip0.3em%
+    {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}%
+    \vfill
+  \end{centering}%
+}
+
+% --- Section page template (mirrors PPTX layout 4 "1_节标题") -----------
+% Renders a divider slide showing the current section name centred on the
+% canvas with a wide blue rule above and below.
+\defbeamertemplate*{section page}{asipp pptx}{%
+  \begin{centering}%
+    \vfill
+    {\color{ASIPPBlue}\rule{0.55\paperwidth}{1.2pt}}\par
+    \vskip0.8em%
+    {\usebeamerfont{section title}\usebeamercolor[fg]{titlelike}\insertsection\par}%
+    \vskip0.6em%
+    {\color{ASIPPBlue}\rule{0.25\paperwidth}{0.6pt}}\par
+    \vfill
+  \end{centering}%
+}
+
+\newcommand{\asippsectionpage}{\frame[plain,noframenumbering]{\sectionpage}}
+
+% Optional: insert a section divider automatically at the start of every
+% \section (suppress with the [nosectionpage] theme option).
+\ifbeamer@autoseppage
+  \AtBeginSection[]{\asippsectionpage}
+\fi
+
+% --- Closing / "Thank you" page -----------------------------------------
+% Usage: \thankspage{Thank you for your attention!}
+%        \thankspage[Q\&A]{谢谢！}      % optional subtitle in []
+\newcommand{\thankspage}[2][]{%
+  {\setbeamertemplate{footline}{}%
+   \begin{frame}[plain,noframenumbering]
+     \vfill
+     \begin{centering}
+       \ifbeamer@nologo\else
+         \includegraphics[height=1.6cm]{asipp_logo.pdf}\par
+         \vskip1.0em%
+       \fi
+       {\usebeamerfont{title}\usebeamercolor[fg]{title}#2\par}%
+       \vskip0.6em%
+       {\color{ASIPPBlue}\rule{0.3\paperwidth}{0.6pt}}\par
+       \ifx\\#1\\\else
+         \vskip0.8em%
+         {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}#1\par}%
+       \fi
+     \end{centering}
+     \vfill
+   \end{frame}}%
+}
+
+% --- Disable navigation symbols unless explicitly requested -------------
+\ifbeamer@nav\else
   \setbeamertemplate{navigation symbols}{}
 \fi
 
-\setbeamerfont{block title}{size={}}
+% --- Misc tweaks --------------------------------------------------------
+\setbeamertemplate{caption}[numbered]
+\setbeamercolor{caption name}{fg=ASIPPBlueDark}
+\setbeamertemplate{bibliography item}[text]
 
-\mode
-<all>
+\mode<all>
