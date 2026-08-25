@@ -38,6 +38,12 @@
 % mirroring the PPTX layout.
 \providecommand{\asippheadlineruleheight}{0.8pt}
 
+% Safety: ensure \insertframetitle is defined when beamer's
+% \beamer@calculateheadfoot measures the headline at \begin{document}
+% (before any \frame has been opened). Without this, headline expansion
+% reports "Undefined control sequence" twice on title/plain frames.
+\providecommand{\insertframetitle}{}
+
 % ----- Headline template (logo + frame title + full-width rule) --------
 % Renders the entire top band: corner logo on the left, centred frame
 % title aligned on the same horizontal band, and a thin full-width blue

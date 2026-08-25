@@ -1,0 +1,284 @@
+% ============================================================
+% 聚变装置安全分析工作指南 — SDR 停机剂量率要求建议沟通
+% ASIPP Beamer 模板
+% 张小康, 2026-08-10
+% ============================================================
+\documentclass[aspectratio=169]{ctexbeamer}
+\usetheme{ASIPP}
+
+% --- Packages ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+% --- Title ---
+\title{聚变装置安全分析工作指南 \\ SDR 停机剂量率要求建议沟通}
+\author{张小康}
+\institute{中国科学院等离子体物理研究所}
+\date{2026年8月10日 \\ 核与辐射安全中心 · 刘巧凤老师}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% ============================================================
+\section{反馈意见概述}
+
+\begin{frame}{反馈意见概述}
+	\begin{block}{原反馈（第3条）}
+		\textbf{建议增加停堆剂量率（Shutdown Dose Rate, SDR）的明确计算要求。}
+	\end{block}
+	\vspace{4pt}
+	\textbf{涉及章节：} §10.2 维修维护的辐射影响 / §5.1 电离辐射分析
+
+	\vspace{8pt}
+	\textbf{当前不足：}
+	\begin{itemize}
+		\item 现有条文仅要求"说明活化辐射源项"和"分析剂量率水平"
+		\item \textbf{未明确要求}不同冷却时间下的 SDR 空间分布、计算方法和评价准则
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{具体建议}
+	\begin{enumerate}
+		\item[(a)] 关键部件不同冷却时间（1天/1周/1月/1年）的 SDR 分布
+		\item[(b)] 说明 SDR 计算方法（R2S法 / 直接输运法）
+		\item[(c)] 与维修人员剂量限值进行对比评价
+	\end{enumerate}
+
+	\vspace{12pt}
+	\begin{block}{可行性依据}
+		BEST 现有 MCNP6 $\to$ FISPACT-II $\to$ natf (R2S) 完整链路，DT/DD 各阶段均有 SDR 验证数据。
+	\end{block}
+\end{frame}
+
+% ============================================================
+\section{为什么 SDR 是必需的？}
+
+\begin{frame}{SDR 在聚变安全分析中的不可替代性}
+	\begin{columns}[T]
+		\column{0.48\textwidth}
+		\textbf{运行剂量率 vs 停堆剂量率}
+		\begin{itemize}
+			\item 瞬发剂量率（运行）→ 屏蔽设计
+			\item \textbf{SDR（停堆后）→ 维修可达性}
+			\item 两者解决\textbf{不同阶段}的安全问题
+		\end{itemize}
+
+		\column{0.48\textwidth}
+		\textbf{SDR 直接决定：}
+		\begin{itemize}
+			\item 维修可达性与遥操作需求
+			\item 人员剂量评估准确性
+			\item 退役方案与 ALARA 规划
+		\end{itemize}
+	\end{columns}
+
+	\vspace{8pt}
+	\begin{alertblock}{核心问题}
+		指南如缺失 SDR 要求，将造成「环评有、安分无」的\textbf{体系缺口}。
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}{国际实践}
+	\begin{table}
+		\small
+		\begin{tabular}{p{2.8cm} p{6.5cm}}
+			\toprule
+			\textbf{装置/项目} & \textbf{SDR 要求}                        \\
+			\midrule
+			ITER [1]       & Preliminary Safety Report (RPrS) 强制交付物 \\
+			EU DEMO [2]    & R2Smesh SDR 评估，含 VV 内部                 \\
+			JET [3]        & DT 前完成 R2S SDR 实测对比                    \\
+			K-DEMO [4]     & Mesh-based R2S 全装置 SDR                 \\
+			MAST-U [5]     & OpenMC R2S, ICRP-116 剂量评估              \\
+			OpenMC [6]     & 2024 全开源 R2S SDR (Nucl. Fusion)        \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+
+	\vspace{6pt}
+	{\footnotesize [1] ITER RPrS, 2011; [2] Afanasenko et al., Appl. Sci., 2026; [3] Eade et al., Nucl. Fusion, 2020; [4] Kim et al., 2021; [5] Nelson et al., IEEE TPS, 2026; [6] Peterson et al., Nucl. Fusion, 2024}
+\end{frame}
+
+\begin{frame}{ITER 第一壁 SDR 演化}
+	\centering
+	\includegraphics[width=0.72\textwidth]{/tmp/decay.png}
+
+	\begin{table}
+		\scriptsize
+		\begin{tabular}{c|p{3cm}|p{3cm}}
+			\toprule
+			\textbf{冷却时间} & \textbf{接触剂量率}    & \textbf{工程含义} \\
+			\midrule
+			停堆即时          & $\sim10^{4}$ Sv/h & 必须远程操作        \\
+			1 天           & $\sim100$ Sv/h    & 遥操作维护         \\
+			1 年           & $\sim5$ Sv/h      & 计划性进入         \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+\end{frame}
+
+% ============================================================
+\section{BEST 现有 SDR 模拟计算能力}
+
+\begin{frame}{R2S 四步计算链路}
+	\centering
+	\includegraphics[width=0.88\textwidth]{/tmp/r2s.png}
+
+	\vspace{8pt}
+	\begin{center}
+		\small
+		MCNP6/OpenMC $\to$ FISPACT-II $\to$ 光子源项 $\to$ MCNP6光子输运 $\to$ SDR分布
+	\end{center}
+	\vspace{4pt}
+	\textbf{辅助}: cosVMPT（CAD→MC几何）、natf（R2S自动化）
+\end{frame}
+
+\begin{frame}{BEST DT SDR 验证数据}
+	\begin{columns}[T]
+		\column{0.52\textwidth}
+		\textbf{DT Phase III 全模型}
+		\begin{itemize}
+			\item 总中子: $2.5\times10^{25}$ n
+			\item 14天 SDR at 第一壁 $\approx$ 306 Sv/h
+			\item 1年冷却降至 $\sim$0.05 Sv/h
+		\end{itemize}
+
+		\vspace{6pt}
+		\textbf{主导核素}:
+		\begin{itemize}
+			\item $^{58}$Co (70.9 d) — 中短期主导
+			\item $^{54}$Mn (312 d) — 中期贡献
+			\item $^{60}$Co (5.27 y) — 长期残留
+		\end{itemize}
+
+		\column{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{/tmp/best_div.png}
+		{\scriptsize BEST 偏滤器屏蔽截面}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{DD 运行 SDR 评估（2026-07-28）}
+	\begin{block}{关键发现}
+		DD 每中子 SDR 贡献 \textbf{约为 DT 的 2.7 倍}。低能中子活化产物衰减更慢。
+	\end{block}
+
+	\begin{table}
+		\begin{tabular}{c|c|c}
+			\toprule
+			\textbf{冷却时间} & \textbf{Pos A SDR} & \textbf{主导核素}        \\
+			\midrule
+			1 天           & 350 mSv/h          & $^{56}$Mn, $^{58}$Co \\
+			14 天          & 2.33 mSv/h         & $^{58}$Co, $^{54}$Mn \\
+			182.5 天       & 0.29 mSv/h         & $^{60}$Co, $^{55}$Fe \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+
+	\vspace{4pt}
+	\textbf{结论}: 14天冷却满足 2.5 $\mu$Sv/h 准入的 DD 中子产额上限: \textbf{$7.6\times10^{16}$ n}
+\end{frame}
+
+% ============================================================
+\section{模拟计算的注意事项}
+
+\begin{frame}{方法选择与关键不确定性}
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\textbf{R2S 法（推荐）}
+		\begin{itemize}
+			\item 计算量可控
+			\item 与 FISPACT 活化数据库深度耦合
+			\item 局限：网格分辨率敏感
+			\item 参考: [3,6]
+		\end{itemize}
+
+		\column{0.5\textwidth}
+		\textbf{D1S 法 [7]}
+		\begin{itemize}
+			\item 一次输运得瞬发+缓发
+			\item 不适用于复杂脉冲序列
+			\item 需预先确定主导核素
+		\end{itemize}
+	\end{columns}
+
+	\vspace{10pt}
+	\textbf{关键不确定性:} (1) 中子能谱精度; (2) 材料微量杂质; (3) 辐照历史; (4) 冷却时间覆盖
+\end{frame}
+
+\begin{frame}{质量保证建议}
+	\begin{enumerate}
+		\item \textbf{Benchmark 验证}: ITER FNG experiment (SINBAD) [3,6]
+		\item \textbf{核素追踪}: 关键核素衰变链单独追踪
+		\item \textbf{方法比对}: R2S vs 直接光子输运（简模验证）
+		\item \textbf{工具交叉验证}: MCNP vs OpenMC 比对
+	\end{enumerate}
+
+	\vspace{8pt}
+	\begin{block}{BEST 环评经验}
+		已采用 R2S 法完成 SDR 评估，可实现多冷却时间分布、全装置 360° 方向、与 GB18871 剂量约束对标。
+	\end{block}
+\end{frame}
+
+% ============================================================
+\section{建议的指南条文措辞}
+
+\begin{frame}{拟新增条文（建议 §10.2 或 §5.1）}
+	\begin{block}{建议条文}
+		应评估装置停机后关键维修区域的残余剂量率（停堆剂量率，SDR），给出主要活化部件（第一壁、偏滤器、真空室等）在不同冷却时间（如1天、1周、1月、1年）下的 SDR 空间分布。说明所采用的 SDR 计算方法（如严格两步法 R2S 或直接输运法），并将结果与维修人员剂量约束值进行对比分析。
+	\end{block}
+
+	\vspace{8pt}
+	\textbf{弹性处理}：
+	\begin{itemize}
+		\item 初步安分阶段可采用\textbf{参考装置类比}（ITER 同材料/工况）
+		\item 给出\textbf{保守上限估计}及 FSAR 阶段详细计算计划
+		\item 说明关键假设和不确定性范围
+	\end{itemize}
+\end{frame}
+
+% ============================================================
+\section{讨论议题}
+
+\begin{frame}{待确认事项与后续路径}
+	\textbf{待确认:}
+	\begin{enumerate}
+		\item SDR 要求放在 §10.2（维修维护）还是 §5.1（源项分析）更合适？
+		\item 冷却时间点是否需要统一（1d/7d/30d/1y）？
+		\item 是否参考 ITER Safety Guide 具体条文？
+	\end{enumerate}
+
+	\vspace{12pt}
+	\textbf{后续沟通:}
+	\begin{itemize}
+		\item 本反馈与其他单位意见的协同
+		\item 征求意见稿修订时间线
+		\item 是否需要提供 BEST SDR 技术补充材料
+	\end{itemize}
+\end{frame}
+
+% ============================================================
+\section{参考文献}
+
+\begin{frame}[allowframebreaks]{参考文献}
+	\small
+	\begin{enumerate}
+		\item ITER Preliminary Safety Report (RPrS), 2011.
+		\item R. Afanasenko et al., ``DEMO Shutdown Dose Rate Assessment,'' \textit{Applied Sciences}, vol. 16, no. 4, 2026.
+		\item T. Eade et al., ``Shutdown dose rate benchmarking using modern particle transport codes,'' \textit{Nuclear Fusion}, vol. 60, 2020. (36 citations)
+		\item J.H. Kim et al., ``Shutdown dose rates analysis of K-DEMO using MCNP5 mesh-based R2S,'' 2021.
+		\item N.G. Nelson et al., ``MAST-U SDR Analysis Using OpenMC,'' \textit{IEEE Trans. Plasma Sci.}, 2026.
+		\item E. Peterson et al., ``Fully open-source R2S SDR capabilities in OpenMC,'' \textit{Nuclear Fusion}, vol. 64, 2024. (19 citations)
+		\item T. Eade et al., ``A new novel-1-step shutdown dose rate method,'' \textit{Fusion Eng. Des.}, 2022.
+		\item GB18871-2002, 电离辐射防护与辐射源安全基本标准.
+		\item BEST 环评报告书-报批稿, 2024-03-25.
+	\end{enumerate}
+\end{frame}
+
+% ============================================================
+\thankspage{谢谢！欢迎讨论 \\ \vspace{8pt} 张小康 · 中科院等离子体物理研究所}
+
+\end{document}
